@@ -22,46 +22,68 @@ namespace ISTask
         {
             InitializeComponent();
             _default = GuestButton.Background;
-            accountManager = new LocalAccountManager(Properties.Settings.Default.Server);
+            try
+            {
+                accountManager = new LocalAccountManager(Properties.Settings.Default.Server);
+            }
+            catch
+            {
+                new MessageBlock("Can't connect to datastore") {WindowStartupLocation = WindowStartupLocation.CenterScreen }.ShowDialog();
+                this.Close();
+            }
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e) => AuthButtonHandlerAsync(LoginText.Text, PasswordText.Password);
 
-        private void Chip_Click(object sender, RoutedEventArgs e) 
+        private void Chip_Click(object sender, RoutedEventArgs e)
         {
             new RegisterWindow().Show();
-            this.Close();          
+            this.Close();
         }
 
-        private async void AuthButtonHandlerAsync(string name, string pass)
+        private async void AuthButtonHandlerAsync(string name, string password)
         {
-            GuestButton.Opacity = 0.5;
-            MainContainer.IsEnabled = false;
-            Progress.Visibility = Visibility.Visible;
-            if (await AuthAsync(name, pass))
+            LockWindow();
+            if (await AuthAsync(name, password))
             {
                 if (RememberMe.IsChecked ?? false)
                 {
-                    Properties.Settings.Default.Login = name;
-                    Properties.Settings.Default.Password = pass;
-                    Properties.Settings.Default.IsRemember = true;
+                    UpdateSettings(name, password, true);
                 }
                 else
                 {
-                    Properties.Settings.Default.Login = null;
-                    Properties.Settings.Default.Password = null;
-                    Properties.Settings.Default.IsRemember = false;
+                    UpdateSettings(null, null, false);
                 }
-                Properties.Settings.Default.Save();
                 this.Close();
             }
             else
             {
-                GuestButton.Opacity = 1;
-                Progress.Visibility = Visibility.Hidden;
                 _ = new MessageBlock("Wrong password or name") { Owner = this }.ShowDialog();
-                MainContainer.IsEnabled = true;
+                UnlockWindow();
             }
+        }
+
+        private void LockWindow()
+        {
+            GuestButton.Opacity = 0.5;
+            MainContainer.IsEnabled = false;
+            Progress.Visibility = Visibility.Visible;
+        }
+
+        private void UnlockWindow()
+        {
+            GuestButton.Opacity = 1;
+            Progress.Visibility = Visibility.Hidden;
+            MainContainer.IsEnabled = true;
+        }
+
+        private void UpdateSettings(string login,string password,bool IsRemember)
+        {
+            Properties.Settings.Default.Login = login;
+            Properties.Settings.Default.Password = password;
+            Properties.Settings.Default.IsRemember = IsRemember;
+            Properties.Settings.Default.Save();
         }
 
         private bool Auth(string name, string password)
@@ -78,16 +100,9 @@ namespace ISTask
 
         private async ValueTask<bool> AuthAsync(string name, string password) => await Task.Run(() => Auth(name, password));
 
+        private void GuestButton_MouseEnter(object sender, MouseEventArgs e) => GuestButton.Background = Brushes.LightGray;
 
-        private void GuestButton_MouseEnter(object sender, MouseEventArgs e)
-        {
-            GuestButton.Background = Brushes.LightGray;
-        }
-
-        private void GuestButton_MouseLeave(object sender, MouseEventArgs e)
-        {
-            GuestButton.Background = _default;
-        }
+        private void GuestButton_MouseLeave(object sender, MouseEventArgs e) => GuestButton.Background = _default;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

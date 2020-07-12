@@ -13,5 +13,7 @@ namespace ISTask.Authentication
         bool VerifyPassword(string name, string password);
 
         void DeleteUser(string name);
+
+        Role? GetRole(string name);
     }
 }

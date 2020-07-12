@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ISTask.Authentication.Views"
-        mc:Ignorable="d"
-        Title="RegisterWindow" Height="625" Width="420"
+        mc:Ignorable="d" Height="625" Width="420"
         
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -19,6 +18,8 @@
         ResizeMode="CanMinimize" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
+        
+        Closed="Window_Closed"
         
       >
 
@@ -104,10 +105,10 @@
         <DockPanel  DockPanel.Dock="Top" 
                      Height="40" Width="300"                                       
                     >
-            <RadioButton HorizontalAlignment="Left" FontWeight="Bold" >
+            <RadioButton x:Name="AdminRadioButton" HorizontalAlignment="Left" FontWeight="Bold" >
                 Админ
             </RadioButton>
-            <RadioButton HorizontalAlignment="Right" FontWeight="Bold">
+            <RadioButton HorizontalAlignment="Right" FontWeight="Bold" IsChecked="True">
                 Пользователь
             </RadioButton>
         </DockPanel>
