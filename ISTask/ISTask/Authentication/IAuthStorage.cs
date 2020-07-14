@@ -8,12 +8,12 @@ namespace ISTask.Authentication
 {
     public interface IAuthStorage
     {
-        bool Register(string name, string password, Role role);
+        bool Register(string login, string password, Role role);
 
-        bool VerifyPassword(string name, string password);
+        bool VerifyPassword(string login, string password);
 
-        void DeleteUser(string name);
+        void DeleteUser(string login);
 
-        Role? GetRole(string name);
+        Role? GetRole(string login);
     }
 }

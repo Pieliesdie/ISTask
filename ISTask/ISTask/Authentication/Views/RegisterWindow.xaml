@@ -17,9 +17,7 @@
         
         ResizeMode="CanMinimize" 
         WindowStartupLocation="CenterScreen"
-        WindowStyle="ToolWindow"
-        
-        Closed="Window_Closed"
+        WindowStyle="ToolWindow" Closing="Window_Closing"
         
       >
 

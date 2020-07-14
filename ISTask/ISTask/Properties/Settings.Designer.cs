@@ -62,9 +62,21 @@ namespace ISTask.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("Users.xml")]
-        public string Server {
+        public string AuthStorage {
             get {
-                return ((string)(this["Server"]));
+                return ((string)(this["AuthStorage"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Resumes.xml")]
+        public string ResumesStorage {
+            get {
+                return ((string)(this["ResumesStorage"]));
+            }
+            set {
+                this["ResumesStorage"] = value;
             }
         }
     }

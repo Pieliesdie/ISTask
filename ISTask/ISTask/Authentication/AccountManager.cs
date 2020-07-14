@@ -28,11 +28,11 @@ namespace ISTask.Authentication
             throw new NotImplementedException();
         }
 
-        public bool Register(string name, string password, Role role)
+        public bool Register(string login, string password, Role role)
         {
             try
             {
-                var userName = new XAttribute("Name", name);
+                var userName = new XAttribute("Login", login);
                 var userPassword = new XAttribute("Password", password);
                 var userRole = new XAttribute("Role", role);
                 users?.Add(new XElement("User", userName, userPassword, userRole));
@@ -45,13 +45,13 @@ namespace ISTask.Authentication
             }
         }
 
-        public bool VerifyPassword(string name, string password)
+        public bool VerifyPassword(string login, string password)
         {
             try
             {
                 var user = users
                     ?.Elements("User")
-                    ?.Where(x => x.Attribute("Name").Value == name && x.Attribute("Password").Value == password)
+                    ?.Where(x => x.Attribute("Login").Value == login && x.Attribute("Password").Value == password)
                     .FirstOrDefault();
                 return user == null ? false : true;
             }
@@ -61,13 +61,13 @@ namespace ISTask.Authentication
             }
         }
 
-        public Role? GetRole(string name)
+        public Role? GetRole(string login)
         {
             try
             {
                 var role = users
                     ?.Elements("User")
-                    ?.Where(x => x.Attribute("Name").Value == name)
+                    ?.Where(x => x.Attribute("Login").Value == login)
                     ?.FirstOrDefault()
                     ?.Attribute("Role")
                     ?.Value;

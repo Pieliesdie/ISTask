@@ -24,7 +24,7 @@ namespace ISTask.Authentication.Views
         public RegisterWindow()
         {
             InitializeComponent();
-            accountManager = new LocalAccountManager(Properties.Settings.Default.Server);
+            accountManager = new LocalAccountManager(Properties.Settings.Default.AuthStorage);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -53,7 +53,8 @@ namespace ISTask.Authentication.Views
             }
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             new AuthWindow().Show();
         }

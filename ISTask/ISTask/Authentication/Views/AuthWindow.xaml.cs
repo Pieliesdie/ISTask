@@ -1,5 +1,6 @@
 ﻿using ISTask.Authentication;
 using ISTask.Authentication.Views;
+using ISTask.Main;
 using System;
 using System.Globalization;
 using System.Threading.Tasks;
@@ -24,11 +25,11 @@ namespace ISTask
             _default = GuestButton.Background;
             try
             {
-                accountManager = new LocalAccountManager(Properties.Settings.Default.Server);
+                accountManager = new LocalAccountManager(Properties.Settings.Default.AuthStorage);
             }
             catch
             {
-                new MessageBlock("Can't connect to datastore") {WindowStartupLocation = WindowStartupLocation.CenterScreen }.ShowDialog();
+                new MessageBlock("Can't connect to datastore") { WindowStartupLocation = WindowStartupLocation.CenterScreen }.ShowDialog();
                 this.Close();
             }
 
@@ -42,24 +43,25 @@ namespace ISTask
             this.Close();
         }
 
-        private async void AuthButtonHandlerAsync(string name, string password)
+        private async void AuthButtonHandlerAsync(string login, string password)
         {
             LockWindow();
-            if (await AuthAsync(name, password))
+            if (await AuthAsync(login, password))
             {
                 if (RememberMe.IsChecked ?? false)
                 {
-                    UpdateSettings(name, password, true);
+                    UpdateSettings(login, password, true);
                 }
                 else
                 {
                     UpdateSettings(null, null, false);
                 }
+                new UserWindow(login, accountManager.GetRole(login) ?? Role.User).Show();
                 this.Close();
             }
             else
             {
-                _ = new MessageBlock("Wrong password or name") { Owner = this }.ShowDialog();
+                _ = new MessageBlock("Wrong password or login") { Owner = this }.ShowDialog();
                 UnlockWindow();
             }
         }
@@ -78,7 +80,7 @@ namespace ISTask
             MainContainer.IsEnabled = true;
         }
 
-        private void UpdateSettings(string login,string password,bool IsRemember)
+        private void UpdateSettings(string login, string password, bool IsRemember)
         {
             Properties.Settings.Default.Login = login;
             Properties.Settings.Default.Password = password;
@@ -86,11 +88,11 @@ namespace ISTask
             Properties.Settings.Default.Save();
         }
 
-        private bool Auth(string name, string password)
+        private bool Auth(string login, string password)
         {
             try
             {
-                return accountManager.VerifyPassword(name, password);
+                return accountManager.VerifyPassword(login, password);
             }
             catch (Exception)
             {
