@@ -36,6 +36,27 @@ namespace ISTask.Main
         public ObservableCollection<string> Features { get => features; set { features = value; OnPropertyChanged("Features"); } }
 
         public string About { get; set; }
+
+        public override string ToString()
+        {
+            string result = string.Empty;
+            result += $"\tResume : \r\n";
+            result += $"FullName :\r {FullName}\n";
+            result += $"Birthday :\r {Birthday}\n";
+            result += $"Location :\r {Location}\n";
+            result += $"Email :\r {Email}\n";
+            result += $"About :\r {About}\n";
+
+            result += $"Features :";
+            foreach (var feature in Features)
+                result += $"\r {feature}";
+
+            result += $"\rLanguages :";
+            foreach (var language in Languages)
+                result += $"\r {language}";
+
+            return result;
+        }
     }
 
     public class FullName

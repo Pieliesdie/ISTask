@@ -1,6 +1,7 @@
 ﻿using ISTask.Authentication;
 using ISTask.Main;
 using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace ISTask
         public List<ResumeModel> Resumes { get; }
         public ResumeViewModel Resume { get; set; } = new ResumeViewModel();
         public bool IsEditable { get; }
+        public bool IsNotEditable => !IsEditable;
 
         public UserWindow(string Login, Role role)
         {
@@ -29,7 +31,16 @@ namespace ISTask
 
             login = Login;
             this.DataContext = this;
-            resumeStorage = new ResumeStorage(Properties.Settings.Default.ResumesStorage);
+            try
+            {
+                resumeStorage = new ResumeStorage(Properties.Settings.Default.ResumesStorage);
+            }
+            catch
+            {
+                new MessageBlock("Can't connect to resume's datastore").ShowDialog();
+                Environment.Exit(0);
+            }
+
             switch (role)
             {
                 case Role.User:
@@ -116,21 +127,7 @@ namespace ISTask
             PrintDialog printDialog = new PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
-                string result = string.Empty;
-                result += $"\tResume : \r\n";
-                result += $"FullName :\r {Resume.ResumeModel.FullName}\n";
-                result += $"Birthday :\r {Resume.ResumeModel.Birthday}\n";
-                result += $"Location :\r {Resume.ResumeModel.Location}\n";
-                result += $"Email :\r {Resume.ResumeModel.Email}\n";
-                result += $"About :\r {Resume.ResumeModel.About}\n";
-
-                result += $"Features :";
-                foreach (var feature in Resume.ResumeModel.Features)
-                    result += $"\r {feature}";
-
-                result += $"\rLanguages :";
-                foreach (var language in Resume.ResumeModel.Languages)
-                    result += $"\r {language}";
+                string result = Resume.ResumeModel.ToString();
 
                 Run run = new Run(result);
                 TextBlock visual = new TextBlock();

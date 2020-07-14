@@ -65,13 +65,13 @@
                     </ToggleButton>
 
                     <MenuItem Header="Menu" Name="MenuButton" Foreground="{DynamicResource MaterialDesignPaper}">
-                        <MenuItem Header="Save as XML" Name="SaveXML" Click="SaveXML_Click">
+                        <MenuItem Header="Save as XML" Name="SaveXML" Click="SaveXML_Click" IsEnabled="{Binding IsEditable}">
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon
                                     Kind="ContentSaveAll" />
                             </MenuItem.Icon>
                         </MenuItem>
-                        <MenuItem Header="Print resume" Name="PrintResume" Click="PrintResume_Click">
+                        <MenuItem Header="Print resume" Name="PrintResume" Click="PrintResume_Click" IsEnabled="{Binding IsNotEditable}" >
                             <MenuItem.Icon>
                                 <materialDesign:PackIcon
                                     Kind="Printer" />
