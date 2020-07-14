@@ -1,2 +1,2 @@
 # ISTask
-Test task for InfoSystem
+Test task for InfoStandart
