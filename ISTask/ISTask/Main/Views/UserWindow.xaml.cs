@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 using System.Xml.Serialization;
 
 namespace ISTask
@@ -111,7 +113,38 @@ namespace ISTask
 
         private void PrintResume_Click(object sender, RoutedEventArgs e)
         {
+            PrintDialog printDialog = new PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                string result = string.Empty;
+                result += $"\tResume : \r\n";
+                result += $"FullName :\r {Resume.ResumeModel.FullName}\n";
+                result += $"Birthday :\r {Resume.ResumeModel.Birthday}\n";
+                result += $"Location :\r {Resume.ResumeModel.Location}\n";
+                result += $"Email :\r {Resume.ResumeModel.Email}\n";
+                result += $"About :\r {Resume.ResumeModel.About}\n";
 
+                result += $"Features :";
+                foreach (var feature in Resume.ResumeModel.Features)
+                    result += $"\r {feature}";
+
+                result += $"\rLanguages :";
+                foreach (var language in Resume.ResumeModel.Languages)
+                    result += $"\r {language}";
+
+                Run run = new Run(result);
+                TextBlock visual = new TextBlock();
+                visual.Inlines.Add(run);
+                visual.Margin = new Thickness(45);
+                visual.TextWrapping = TextWrapping.Wrap;
+                Size pageSize = new Size(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight);
+                visual.Measure(pageSize);
+                visual.Arrange(new Rect(0, 0, pageSize.Width, pageSize.Height));
+
+                printDialog.PrintVisual(visual, "Print resume");
+            }
         }
+
+
     }
 }
